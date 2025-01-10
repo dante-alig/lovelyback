@@ -696,6 +696,30 @@ app.get("/search", async (req, res) => {
   }
 });
 
+// Route GET pour la page d'accueil
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "Bienvenue sur l'API des Locations ! 🚀",
+    endpoints: [
+      { method: "POST", path: "/location", description: "Créer une nouvelle location" },
+      { method: "GET", path: "/items", description: "Récupérer toutes les locations" },
+      { method: "GET", path: "/items/:id", description: "Récupérer une location par ID" },
+      { method: "PUT", path: "/items/:id", description: "Mettre à jour une location" },
+      { method: "DELETE", path: "/items/:id/photo", description: "Supprimer une photo d'une location" },
+      { method: "GET", path: "/drink", description: "Filtrer les lieux pour prendre un verre" },
+      { method: "GET", path: "/eat", description: "Récupérer les lieux pour manger ensemble" },
+      { method: "GET", path: "/fun", description: "Récupérer les lieux pour partager une activité" },
+      { method: "GET", path: "/filterCategories", description: "Filtrer et afficher les catégories" },
+      { method: "GET", path: "/filter-nearby", description: "Trouver des lieux à proximité" },
+      { method: "PUT", path: "/location/:id/keywords", description: "Modifier les mots-clés d'une location" },
+      { method: "PUT", path: "/location/:id/filters", description: "Modifier les filtres d'une location" },
+      { method: "PUT", path: "/location/:id/address", description: "Mettre à jour l'adresse d'une location" },
+      { method: "PUT", path: "/location/:id/description", description: "Mettre à jour la description d'une location" },
+      { method: "GET", path: "/search", description: "Effectuer une recherche globale" },
+    ],
+  });
+});
+
 // Démarrage du serveur
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
