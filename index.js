@@ -307,10 +307,30 @@ app.get("/drink", async (req, res) => {
 // Route GET pour récupérer les locations avec placeCategory === "manger_ensemble"
 app.get("/eat", async (req, res) => {
   try {
-    // Recherche dans la base de données
-    const locations = await Location.find({
-      placeCategory: "manger_ensemble",
-    });
+    const { postalCode, keywords, priceRange, filters } = req.query;
+
+    // Recherche initiale pour placeCategory === "manger_ensemble"
+    const baseFilter = { placeCategory: "manger_ensemble" };
+
+    // Ajout des autres filtres dynamiques
+    if (postalCode) baseFilter.postalCode = postalCode;
+    if (keywords) baseFilter.keywords = { $in: keywords.split(",") };
+    if (priceRange) baseFilter.priceRange = priceRange;
+    if (filters) {
+      // Convertir la chaîne de filtres en tableau
+      const filterArray = filters.split(","); // Exemple : "Décoration:Cosy,Ambiance:Branchée"
+      baseFilter.filters = { $all: filterArray }; // Tous les filtres doivent être présents
+    }
+
+    // Recherche avec les filtres combinés
+    const locations = await Location.find(baseFilter);
+
+    if (locations.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Aucun lieu trouvé avec ces critères." });
+    }
+
     res.status(200).json(locations);
   } catch (error) {
     console.error("Erreur lors de la récupération des données:", error);
